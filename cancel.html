@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>❌ Pagamento Cancelado - NotePad Pro</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        .cancel-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            max-width: 500px;
+        }
+
+        .cancel-icon {
+            font-size: 4rem;
+            margin: 1rem 0;
+        }
+
+        h1 {
+            color: #ef4444;
+            margin: 1rem 0;
+            font-size: 2rem;
+        }
+
+        p {
+            color: #6b7280;
+            margin: 1rem 0;
+            line-height: 1.6;
+        }
+
+        .cancel-reasons {
+            background: #fef2f2;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+            text-align: left;
+            font-size: 0.9rem;
+            border-left: 4px solid #ef4444;
+        }
+
+        .cancel-reasons h3 {
+            color: #ef4444;
+            margin-top: 0;
+        }
+
+        .cancel-reasons ul {
+            margin: 0.5rem 0;
+            padding-left: 1.5rem;
+        }
+
+        .cancel-reasons li {
+            margin: 0.25rem 0;
+            color: #6b7280;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: #f5576c;
+            color: white;
+            text-decoration: none;
+            border-radius: 0.5rem;
+            margin: 0.5rem;
+            transition: background 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .btn:hover {
+            background: #e63946;
+        }
+
+        .btn-secondary {
+            background: #6b7280;
+        }
+
+        .btn-secondary:hover {
+            background: #4b5563;
+        }
+    </style>
+</head>
+<body>
+    <div class="cancel-container">
+        <div class="cancel-icon">😞</div>
+        <h1>Pagamento Cancelado</h1>
+        
+        <p>Sua tentativa de assinatura foi cancelada. Nenhum débito foi realizado.</p>
+
+        <div class="cancel-reasons">
+            <h3>O que pode ter acontecido?</h3>
+            <ul>
+                <li>Você decidiu não continuar com a assinatura</li>
+                <li>Ocorreu um erro durante o pagamento</li>
+                <li>Sua sessão expirou</li>
+                <li>Houve problema com seu método de pagamento</li>
+            </ul>
+        </div>
+
+        <p>Não se preocupe! Você pode tentar novamente a qualquer momento.</p>
+
+        <div>
+            <a href="index.html" class="btn">Voltar aos Planos</a>
+            <a href="index.html" class="btn btn-secondary">Continuar com Plano Free</a>
+        </div>
+
+        <p style="margin-top: 2rem; font-size: 0.85rem; color: #9ca3af;">
+            Precisa de ajuda? 
+            <a href="#" style="color: #f5576c; text-decoration: none;">Contate nosso suporte</a>
+        </p>
+    </div>
+
+    <script>
+        // Log de cancelamento
+        console.log('❌ Usuário cancelou o checkout em:', new Date().toLocaleString('pt-BR'));
+    </script>
+</body>
+</html>

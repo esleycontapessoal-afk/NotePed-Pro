@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>✅ Pagamento Confirmado - NotePad Pro</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        .success-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            text-align: center;
+            max-width: 500px;
+        }
+
+        .success-icon {
+            font-size: 4rem;
+            margin: 1rem 0;
+        }
+
+        h1 {
+            color: #10b981;
+            margin: 1rem 0;
+            font-size: 2rem;
+        }
+
+        p {
+            color: #6b7280;
+            margin: 1rem 0;
+            line-height: 1.6;
+        }
+
+        .success-details {
+            background: #f3f4f6;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        .success-details p {
+            margin: 0.5rem 0;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 0.75rem 1.5rem;
+            background: #667eea;
+            color: white;
+            text-decoration: none;
+            border-radius: 0.5rem;
+            margin-top: 1rem;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: #5568d3;
+        }
+
+        .loading {
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="success-container">
+        <div class="success-icon">🎉</div>
+        <h1>Pagamento Confirmado!</h1>
+        
+        <p id="loadingMsg">Processando seu pagamento...</p>
+
+        <div class="success-details" id="details" style="display: none;">
+            <p><strong>Plano:</strong> <span id="planoName">-</span></p>
+            <p><strong>Email:</strong> <span id="emailName">-</span></p>
+            <p><strong>Status:</strong> ✅ Ativo</p>
+        </div>
+
+        <p id="successMsg" style="display: none;">
+            Sua assinatura foi ativada com sucesso! 
+            Você agora tem acesso a todos os recursos do seu plano.
+        </p>
+
+        <a href="index.html" class="btn">Voltar ao NotePad Pro</a>
+    </div>
+
+    <script>
+        // Obter session_id da URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const sessionId = urlParams.get('session_id');
+
+        if (!sessionId) {
+            document.getElementById('loadingMsg').textContent = '❌ Erro: Session ID não encontrada';
+            document.getElementById('loadingMsg').style.color = '#ef4444';
+        } else {
+            // Buscar informações da sessão
+            fetch(`/checkout-session/${sessionId}`)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById('loadingMsg').style.display = 'none';
+                        document.getElementById('details').style.display = 'block';
+                        document.getElementById('successMsg').style.display = 'block';
+                        
+                        document.getElementById('planoName').textContent = data.plano.toUpperCase();
+                        document.getElementById('emailName').textContent = data.email;
+
+                        // Salvar no localStorage
+                        const usuario = JSON.parse(localStorage.getItem('usuarioLogado') || '{}');
+                        usuario.plano = data.plano;
+                        usuario.dataAssinatura = new Date().toISOString();
+                        usuario.stripeSubscriptionId = data.subscriptionId;
+                        localStorage.setItem('usuarioLogado', JSON.stringify(usuario));
+                    } else {
+                        document.getElementById('loadingMsg').textContent = '⏳ Pagamento em processamento. Verifique novamente em alguns minutos.';
+                    }
+                })
+                .catch(err => {
+                    console.error('Erro:', err);
+                    document.getElementById('loadingMsg').textContent = '❌ Erro ao processar: ' + err.message;
+                    document.getElementById('loadingMsg').style.color = '#ef4444';
+                });
+        }
+
+        // Redirecionar após 5 segundos
+        setTimeout(() => {
+            window.location.href = 'index.html';
+        }, 5000);
+    </script>
+</body>
+</html>

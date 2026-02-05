@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NotePad Pro - Suas ideias em um só lugar</title>
+    
+    <!-- Fontes Modernas -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="header-logo">
+                    <div class="author-section">
+                        <div class="author-badge">
+                            <span class="author-label">Criado por</span>
+                            <span class="author-name">Esley Augusto</span>
+                        </div>
+                        <div class="version-badge">
+                            <span class="version-label">BETA</span>
+                            <span class="version-number">V.001</span>
+                        </div>
+                    </div>
+                    <div class="logo-icon">📝</div>
+                    <div>
+                        <h1 class="logo-title">NotePad Pro</h1>
+                        <p class="logo-subtitle">Suas ideias em um só lugar</p>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button class="btn btn-add" id="btnNovaAnotacao" title="Nova anotação">
+                        <span class="btn-icon">✨</span>
+                        <span>Nova Nota</span>
+                    </button>
+                    <button class="btn btn-export" id="btnExportar" title="Exportar notas">
+                        <span class="btn-icon">⬇️</span>
+                    </button>
+                    <button class="btn btn-login" id="btnLogin" title="Login">
+                        <span class="btn-icon">🔐</span>
+                        <span id="loginText">Login</span>
+                    </button>
+                </div>
+            </div>
+            <div class="header-stats">
+                <div class="stat-item">
+                    <span class="stat-label">Notas</span>
+                    <span class="stat-value" id="totalNotas">0</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat-item">
+                    <span class="stat-label">Total de caracteres</span>
+                    <span class="stat-value" id="totalCaracteres">0</span>
+                </div>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <!-- Sidebar com lista de notas -->
+            <aside class="sidebar">
+                <div class="sidebar-header">
+                    <input type="text" id="searchInput" class="search-input" placeholder="Pesquisar notas...">
+                </div>
+                <div class="notes-list" id="notasList"></div>
+            </aside>
+
+            <!-- Editor de notas -->
+            <section class="editor-section">
+                <div id="editorVazio" class="editor-vazio">
+                    <div class="empty-state">
+                        <p>📝</p>
+                        <h2>Nenhuma nota selecionada</h2>
+                        <p>Crie uma nova nota ou selecione uma da lista</p>
+                    </div>
+                </div>
+
+                <div id="editorConteudo" class="editor-conteudo" style="display: none;">
+                    <div class="editor-header">
+                        <div class="editor-top">
+                            <input type="text" id="tituloPasta" class="titulo-input" placeholder="Título da nota">
+                            <div class="editor-actions">
+                                <select id="categoriaPasta" class="categoria-select">
+                                    <option value="pessoal">Pessoal</option>
+                                    <option value="trabalho">Trabalho</option>
+                                    <option value="estudo">Estudo</option>
+                                </select>
+                                <button class="btn-icon-only" id="btnFixar" title="Fixar nota">📌</button>
+                                <button class="btn-icon-only" id="btnFoco" title="Modo foco">🎯</button>
+                            </div>
+                        </div>
+                        <div class="editor-info" id="editorInfo"></div>
+                    </div>
+
+                    <div class="editor-toolbar">
+                        <div class="toolbar-group">
+                            <button class="toolbar-btn" id="btnNegrito" title="Negrito (Ctrl+B)"><strong>B</strong></button>
+                            <button class="toolbar-btn" id="btnItalico" title="Itálico (Ctrl+I)"><em>I</em></button>
+                            <button class="toolbar-btn" id="btnSublinhado" title="Sublinhado (Ctrl+U)"><u>U</u></button>
+                        </div>
+                        <div class="toolbar-divider"></div>
+                        <div class="toolbar-group">
+                            <button class="toolbar-btn" id="btnLista" title="Lista com pontos">• Lista</button>
+                            <button class="toolbar-btn" id="btnListaNum" title="Lista numerada">1. Lista</button>
+                        </div>
+                        <div class="toolbar-divider"></div>
+                        <div class="toolbar-group">
+                            <button class="toolbar-btn" id="btnCodigo" title="Código (Ctrl+`)">{'<>'}</button>
+                        </div>
+                        <div class="auto-save-indicator" id="autoSaveIndicator">Salvo</div>
+                    </div>
+
+                    <textarea id="conteudoPasta" class="conteudo-textarea" placeholder="Digite sua nota aqui..."></textarea>
+                    <div class="editor-footer">
+                        <div class="info-texto">
+                            <span id="contador">0 caracteres</span>
+                            <span class="info-divider">•</span>
+                            <span id="contadorPalavras">0 palavras</span>
+                            <span class="info-divider">•</span>
+                            <span id="tempoLeitura">0 min de leitura</span>
+                        </div>
+                        <button class="btn btn-danger" id="btnDeletar">Deletar</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal de Login -->
+    <div class="login-modal" id="loginModal">
+        <div class="modal-overlay" id="modalOverlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Faça seu Login</h2>
+                <button class="modal-close" id="btnCloseModal">✕</button>
+            </div>
+            <form id="loginForm" class="login-form">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <div class="input-wrapper">
+                        <input type="email" id="email" name="email" placeholder="seu@email.com" required>
+                        <span class="input-icon">✉️</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="password">Senha</label>
+                    <div class="input-wrapper">
+                        <input type="password" id="password" name="password" placeholder="••••••••" required>
+                        <span class="input-icon">🔒</span>
+                    </div>
+                </div>
+                <div class="form-remember">
+                    <input type="checkbox" id="rememberMe" name="rememberMe">
+                    <label for="rememberMe">Lembrar-me</label>
+                </div>
+                <button type="submit" class="btn btn-submit">Entrar</button>
+            </form>
+            <div class="divider-auth">
+                <span>OU</span>
+            </div>
+            <div id="g_id_onload" data-client_id="230411627867-rfdqb2a5eegjop9h1podqvph4frtvcf6.apps.googleusercontent.com" data-callback="handleLoginGoogle" class="google-login-container"></div>
+            <div class="g_id_signin" data-type="standard" data-size="large" data-theme="dark" data-text="signin_with" data-shape="rectangular" data-logo_alignment="left"></div>
+            <div class="modal-footer">
+                <p>Não tem uma conta? <a href="#" class="signup-link" id="signupLink">Criar conta</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Registro -->
+    <div class="login-modal" id="signupModal">
+        <div class="modal-overlay" id="modalOverlay2"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Criar Conta</h2>
+                <button class="modal-close" id="btnCloseSignup">✕</button>
+            </div>
+            <form id="signupForm" class="login-form">
+                <div class="form-group">
+                    <label for="signupName">Nome Completo</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="signupName" name="name" placeholder="Seu Nome" required>
+                        <span class="input-icon">👤</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="signupEmail">Email</label>
+                    <div class="input-wrapper">
+                        <input type="email" id="signupEmail" name="email" placeholder="seu@email.com" required>
+                        <span class="input-icon">✉️</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="signupPassword">Senha</label>
+                    <div class="input-wrapper">
+                        <input type="password" id="signupPassword" name="password" placeholder="••••••••" required>
+                        <span class="input-icon">🔒</span>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-submit">Criar Conta</button>
+            </form>
+            <div class="modal-footer">
+                <p>Já tem uma conta? <a href="#" class="signup-link" id="loginLink">Fazer login</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmação de Exclusão -->
+    <div class="confirm-modal" id="confirmDeleteModal">
+        <div class="modal-overlay" id="confirmOverlay"></div>
+        <div class="modal-content confirm-content">
+            <div class="modal-header">
+                <h2>⚠️ Excluir Nota</h2>
+            </div>
+            <p class="confirm-message">Tem certeza que deseja excluir esta nota? Esta ação não pode ser desfeita.</p>
+            <div class="confirm-actions">
+                <button class="btn btn-cancel" id="btnCancelDelete">Cancelar</button>
+                <button class="btn btn-danger" id="btnConfirmDelete">Excluir</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Seletor de Temas -->
+    <div class="theme-selector" id="themeSelector">
+        <button class="theme-option" data-theme="dark" title="Dark">🌙</button>
+        <button class="theme-option" data-theme="light" title="Light">☀️</button>
+        <button class="theme-option" data-theme="purple" title="Purple">💜</button>
+        <button class="theme-option" data-theme="blue" title="Blue">💙</button>
+        <button class="theme-option" data-theme="green" title="Green">💚</button>
+    </div>
+
+    <!-- Modal de Sugestões -->
+    <div id="sugestionModal" class="modal-overlay">
+        <div class="modal-content modal-suggestion">
+            <div class="modal-header">
+                <h2>💡 Enviar Sugestão</h2>
+                <button class="modal-close" id="btnCloseSuggestion">&times;</button>
+            </div>
+            <form id="suggestionForm" class="suggestion-form">
+                <div class="form-group">
+                    <label for="suggestionName">Nome:</label>
+                    <input type="text" id="suggestionName" placeholder="Seu nome" required>
+                </div>
+                <div class="form-group">
+                    <label for="suggestionEmail">Email:</label>
+                    <input type="email" id="suggestionEmail" placeholder="seu@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="suggestionText">Sua Sugestão:</label>
+                    <textarea id="suggestionText" placeholder="Descreva sua sugestão de melhoria..." rows="5" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="suggestionCategory">Categoria:</label>
+                    <select id="suggestionCategory">
+                        <option value="feature">Nova Funcionalidade</option>
+                        <option value="improvement">Melhoria</option>
+                        <option value="bug">Correção de Bug</option>
+                        <option value="design">Design/Interface</option>
+                        <option value="other">Outro</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-submit-suggestion">Enviar Sugestão</button>
+            </form>
+            <div id="suggestionSuccess" class="suggestion-success" style="display: none;">
+                <div class="success-message">
+                    <span class="success-icon">✅</span>
+                    <p>Obrigado pela sugestão!</p>
+                    <p class="success-subtext">Vamos analisar e considerar para próximas versões.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Botão flutuante de sugestões (canto inferior direito) -->
+    <button id="btnSuggestion" class="btn-suggestion-float" title="Enviar Sugestão">
+        <span>💡</span>
+    </button>
+
+    <script src="app.js"></script>
+</body>
+</html>
