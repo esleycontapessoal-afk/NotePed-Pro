@@ -22,6 +22,7 @@ class BlcoDeNotas {
         this.setupSuggestions();
         this.renderizarNotas();
         this.atualizarEstatisticas();
+        this.mostrarAvisoBeta();
     }
 
     // Setup de event listeners
@@ -66,6 +67,9 @@ class BlcoDeNotas {
         // Botão deletar
         document.getElementById('btnDeletar').addEventListener('click', () => this.confirmarDelecao());
 
+        // Botão salvar
+        document.getElementById('btnSalvar').addEventListener('click', () => this.salvarEDesselecionar());
+
         // Modal confirmação
         document.getElementById('confirmOverlay').addEventListener('click', () => this.fecharConfirmacao());
         document.getElementById('btnCancelDelete').addEventListener('click', () => this.fecharConfirmacao());
@@ -95,6 +99,10 @@ class BlcoDeNotas {
         document.querySelectorAll('.theme-option').forEach(btn => {
             btn.addEventListener('click', () => this.mudarTema(btn.dataset.theme));
         });
+
+        // Fechar aviso beta
+        document.getElementById('btnCloseWarning').addEventListener('click', () => this.fecharAvisoBeta());
+        document.getElementById('warningOverlay').addEventListener('click', () => this.fecharAvisoBeta());
 
         // Verificar login ao carregar
         this.verificarLogin();
@@ -175,6 +183,30 @@ class BlcoDeNotas {
         }
     }
 
+    // Salvar e desselecionar nota
+    salvarEDesselecionar() {
+        if (this.notaSelecionada) {
+            // Salvar a nota primeiro
+            this.salvarNota();
+            
+            // Limpar e desselecionar
+            this.notaSelecionada = null;
+            document.getElementById('editorVazio').style.display = 'flex';
+            document.getElementById('editorConteudo').style.display = 'none';
+            this.renderizarNotas();
+            this.atualizarEstatisticas();
+            
+            // Feedback visual
+            const indicador = document.getElementById('autoSaveIndicator');
+            if (indicador) {
+                indicador.textContent = '✓ Salvo com sucesso!';
+                setTimeout(() => {
+                    indicador.textContent = 'Salvo';
+                }, 2000);
+            }
+        }
+    }
+
     // Agendar salvamento automático
     agendarSalvamento() {
         clearTimeout(this.tempoSalvamento);
@@ -194,6 +226,11 @@ class BlcoDeNotas {
         }, 1500);
     }
 
+    // Confirmar deleção
+    confirmarDelecao() {
+        document.getElementById('confirmDeleteModal').style.display = 'flex';
+    }
+
     // Deletar nota
     deletarNota() {
         if (this.notaSelecionada && confirm('Tem certeza que deseja deletar esta nota?')) {
@@ -205,6 +242,23 @@ class BlcoDeNotas {
             this.renderizarNotas();
             this.atualizarEstatisticas();
         }
+    }
+
+    deletarNotaConfirmado() {
+        if (this.notaSelecionada) {
+            this.notas = this.notas.filter(n => n.id !== this.notaSelecionada.id);
+            this.salvarNotas();
+            this.notaSelecionada = null;
+            document.getElementById('editorVazio').style.display = 'flex';
+            document.getElementById('editorConteudo').style.display = 'none';
+            this.renderizarNotas();
+            this.atualizarEstatisticas();
+            this.fecharConfirmacao();
+        }
+    }
+
+    fecharConfirmacao() {
+        document.getElementById('confirmDeleteModal').style.display = 'none';
     }
 
     // Atualizar contador de caracteres
@@ -486,6 +540,23 @@ class BlcoDeNotas {
         alert('Você saiu com sucesso! Até logo! 👋');
     }
 
+    // === FUNÇÕES DE AVISO BETA ===
+    mostrarAvisoBeta() {
+        // Verificar se o usuário já viu o aviso nesta sessão
+        const avisoVistoHoje = sessionStorage.getItem('avisoBetaVisto');
+        
+        if (!avisoVistoHoje) {
+            const modal = document.getElementById('warningModal');
+            modal.classList.add('ativo');
+            sessionStorage.setItem('avisoBetaVisto', 'true');
+        }
+    }
+
+    fecharAvisoBeta() {
+        const modal = document.getElementById('warningModal');
+        modal.classList.remove('ativo');
+    }
+
     // === FUNÇÕES DE FORMATAÇÃO ===
 
     // Aplicar formatação (negrito, itálico, sublinhado, código)
@@ -576,31 +647,6 @@ class BlcoDeNotas {
         localStorage.setItem('modoFoco', this.modoFoco);
     }
 
-    // Confirmar deleção
-    confirmarDelecao() {
-        if (this.notaSelecionada) {
-            document.getElementById('confirmDeleteModal').classList.add('ativo');
-        }
-    }
-
-    // Fechar confirmação
-    fecharConfirmacao() {
-        document.getElementById('confirmDeleteModal').classList.remove('ativo');
-    }
-
-    // Deletar nota após confirmação
-    deletarNotaConfirmado() {
-        if (this.notaSelecionada) {
-            this.notas = this.notas.filter(n => n.id !== this.notaSelecionada.id);
-            this.salvarNotas();
-            this.notaSelecionada = null;
-            document.getElementById('editorVazio').style.display = 'flex';
-            document.getElementById('editorConteudo').style.display = 'none';
-            this.renderizarNotas();
-            this.atualizarEstatisticas();
-            this.fecharConfirmacao();
-        }
-    }
     // === FUNÇÕES DE TEMA ===
 
     // Carregar tema

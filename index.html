@@ -11,7 +11,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="style.css">
-    <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
     <div class="container">
@@ -125,7 +124,13 @@
                             <span class="info-divider">•</span>
                             <span id="tempoLeitura">0 min de leitura</span>
                         </div>
-                        <button class="btn btn-danger" id="btnDeletar">Deletar</button>
+                        <div class="footer-actions">
+                            <button class="btn btn-success" id="btnSalvar" title="Salvar nota">
+                                <span class="btn-icon">💾</span>
+                                <span>Salvar</span>
+                            </button>
+                            <button class="btn btn-danger" id="btnDeletar" title="Deletar nota">Deletar</button>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -164,8 +169,14 @@
             <div class="divider-auth">
                 <span>OU</span>
             </div>
-            <div id="g_id_onload" data-client_id="230411627867-rfdqb2a5eegjop9h1podqvph4frtvcf6.apps.googleusercontent.com" data-callback="handleLoginGoogle" class="google-login-container"></div>
-            <div class="g_id_signin" data-type="standard" data-size="large" data-theme="dark" data-text="signin_with" data-shape="rectangular" data-logo_alignment="left"></div>
+            <div class="google-login-container">
+                <button type="button" class="btn-google-coming-soon" disabled title="Em breve">
+                    <svg class="google-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                    </svg>
+                    <span>Login com Google - Em breve</span>
+                </button>
+            </div>
             <div class="modal-footer">
                 <p>Não tem uma conta? <a href="#" class="signup-link" id="signupLink">Criar conta</a></p>
             </div>
@@ -222,6 +233,39 @@
                 <button class="btn btn-cancel" id="btnCancelDelete">Cancelar</button>
                 <button class="btn btn-danger" id="btnConfirmDelete">Excluir</button>
             </div>
+        </div>
+    </div>
+
+    <!-- Modal de Aviso - Site em Desenvolvimento -->
+    <div class="warning-modal" id="warningModal">
+        <div class="modal-overlay" id="warningOverlay"></div>
+        <div class="modal-content warning-content">
+            <div class="warning-header">
+                <span class="warning-icon">🚀</span>
+                <h2>Site em Desenvolvimento</h2>
+                <span class="warning-badge">BETA</span>
+            </div>
+            <div class="warning-body">
+                <p><strong>Bem-vindo ao NotePad Pro!</strong></p>
+                <p>O site ainda está em fase de desenvolvimento e refinamento. Estamos trabalhando constantemente para melhorar sua experiência.</p>
+                
+                <div class="beta-features">
+                    <h3>🎯 O que você pode fazer:</h3>
+                    <ul>
+                        <li>✅ Criar e editar notas</li>
+                        <li>✅ Organizar por categorias</li>
+                        <li>✅ Fixar notas importantes</li>
+                        <li>✅ Alternar entre temas</li>
+                        <li>✅ Modo foco para melhor concentração</li>
+                    </ul>
+                </div>
+
+                <div class="bug-suggestion">
+                    <p><strong>📝 Encontrou um bug ou tem uma sugestão?</strong></p>
+                    <p>Clique no botão 💡 (canto inferior) para enviar suas sugestões e relatos de bugs. Sua opinião é muito importante!</p>
+                </div>
+            </div>
+            <button class="btn btn-success" id="btnCloseWarning">Entendi, continuar</button>
         </div>
     </div>
 
